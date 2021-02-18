@@ -12,6 +12,18 @@ def get_vendedores(request):
   vendedores = Vendedor.objects.all()
   serializer = VendedorSerializer(vendedores, many=True)
   return JsonResponse({'vendedores': serializer.data}, safe=False, status=status.HTTP_200_OK)
+  
+@api_view(["GET"])
+def get_vendedor(request, vendedor_id):
+  try:
+    vendedor = Vendedor.objects.get(pk=vendedor_id)
+    serializer = VendedorSerializer(vendedor)
+    return JsonResponse({'vendedor': serializer.data}, safe=False, status=status.HTTP_200_OK)
+  except ObjectDoesNotExist as e:
+    return JsonResponse({'error': str(e)}, safe=False, status=status.HTTP_404_NOT_FOUND)
+  except Exception:
+    return JsonResponse({'error': 'Something terrible went wrong'}, safe=False, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 @api_view(["POST"])
 def add_vendedor(request):
