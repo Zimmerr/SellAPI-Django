@@ -6,7 +6,6 @@ from ..models import Vendedor
 from ..serializers import VendedorSerializer
 
 
-# initialize the APIClient app
 client = Client()
 
 class GetAllVendedoresTest(TestCase):
@@ -20,7 +19,7 @@ class GetAllVendedoresTest(TestCase):
 
   def test_get_all_vendedores(self):
     # get API response
-    response = client.get('/api/getVendedores')
+    response = client.get('/api/vendedores')
     responseData = json.loads(response.content)['data']
     # get data from db
     puppies = Vendedor.objects.all()
@@ -39,7 +38,7 @@ class GetVendedorTest(TestCase):
         nome='Claudinho', data_nasc='1991-11-01')
         
     def test_get_vendedor_valido(self):
-      response = client.get('/api/getVendedor/' + str(self.gerson.pk))
+      response = client.get('/api/vendedores/' + str(self.gerson.pk))
       responseData = json.loads(response.content)['data']
       vendedor = Vendedor.objects.get(pk=self.gerson.pk)
       serializer = VendedorSerializer(vendedor)
@@ -48,7 +47,7 @@ class GetVendedorTest(TestCase):
       self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_vendedor_invalido(self):
-      response = client.get('/api/getVendedor/' + str(999))
+      response = client.get('/api/vendedores/' + str(999))
       self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
 class CreateVendedorTest(TestCase):
@@ -64,7 +63,7 @@ class CreateVendedorTest(TestCase):
 
     def test_create_valid_puppy(self):
         response = client.post(
-            '/api/addVendedor',
+            '/api/vendedores',
             data=json.dumps(self.valid_payload),
             content_type='application/json'
         )
@@ -72,7 +71,7 @@ class CreateVendedorTest(TestCase):
 
     def test_create_invalid_puppy(self):
         response = client.post(
-            '/api/addVendedor',
+            '/api/vendedores',
             data=json.dumps(self.invalid_payload),
             content_type='application/json'
         )
@@ -98,7 +97,7 @@ class UpdateVendedorTest(TestCase):
 
   def test_valid_update_puppy(self):
     response = client.put(
-      '/api/updateVendedor/' + str(self.gerson.pk),
+      '/api/vendedores/' + str(self.gerson.pk),
       data=json.dumps(self.valid_payload),
       content_type='application/json'
     )
@@ -109,7 +108,23 @@ class UpdateVendedorTest(TestCase):
 
   def test_invalid_update_puppy(self):
     response = client.put(
-      '/api/updateVendedor/' + str(self.gerson.pk),
+      '/api/vendedores/' + str(self.gerson.pk),
       data=json.dumps(self.invalid_payload),
       content_type='application/json')
     self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+class DeleteVendedorTest(TestCase):
+
+  def setUp(self):
+    self.thiago = Vendedor.objects.create(
+      nome='Thiago Neves', data_nasc='1975-05-12')
+    self.gerson = Vendedor.objects.create(
+      nome='Gerson', data_nasc='1995-08-27')
+
+  def test_valid_delete_vendedor(self):
+      response = client.delete('/api/vendedores/' + str(self.gerson.pk))
+      self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+  def test_invalid_delete_vendedor(self):
+      response = client.delete('/api/vendedores/' + str(999))
+      self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)   
