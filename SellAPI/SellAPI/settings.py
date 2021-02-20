@@ -11,10 +11,14 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Initialise environment variables
+env = environ.Env()
+environ.Env.read_env()
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
@@ -82,6 +86,16 @@ DATABASES = {
     }
 }
 
+#DATABASES = {
+#  'default': {
+#      'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#      'NAME': env('DATABASE_NAME'),
+#      'USER': env('DATABASE_USER'),
+#      'PASSWORD': env('DATABASE_PASSWORD'),
+#      'HOST': env('DATABASE_HOST'),
+#      'PORT': env('DATABASE_PORT'),
+#  }
+#}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
