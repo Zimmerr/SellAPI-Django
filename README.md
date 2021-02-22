@@ -20,28 +20,12 @@ O servidor subirá na porta 8000 da sua máquina.
 Caso queira, é possivel trocar o banco de dados utilizado para o Postgres. Para fazer isso são necessários alguns passos:
 + Vá até a pasta SellAPI
 + Preencha o arquivo `env` com os dados necessários e renomeie-o para `.env`
-+ Apague/comente a variável DATABASES no arquivo `settings.py`, e descomente a outra versão dessa mesma váriavel, deixando assim:
++ Apague/comente a variável DATABASES no arquivo `settings.py`, e descomente o seguinte bloco de código:
   + ```
-    # Database
-    # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
-
-    # DATABASES = {
-    #     'default': {
-    #         'ENGINE': 'django.db.backends.sqlite3',
-    #         'NAME': BASE_DIR / 'db.sqlite3',
-    #     }
-    # }
-
-    DATABASES = {
-      'default': {
-          'ENGINE': 'django.db.backends.postgresql_psycopg2',
-          'NAME': env('DATABASE_NAME'),
-          'USER': env('DATABASE_USER'),
-          'PASSWORD': env('DATABASE_PASSWORD'),
-          'HOST': env('DATABASE_HOST'),
-          'PORT': env('DATABASE_PORT'),
-      }
-    }
+    if 'test' in sys.argv:
+      DATABASES = db_sqlite
+    else:
+      DATABASES = db_postgres
     ```
 + Se as variáveis de ambiente foram preenchidas corretamente, a aplicação deverá rodar normalmente num banco de dados PostgreSQL. Caso queira reverter, apenas inverta a variável DATABASES que está comentada
 

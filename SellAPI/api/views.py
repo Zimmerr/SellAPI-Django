@@ -67,3 +67,14 @@ def get_delete_update_vendedor(request, vendedor_id):
       return HttpResponse(status=status.HTTP_204_NO_CONTENT)
     except Exception as e:
       return JsonResponse({'error': 'Something went wrong'}, safe=False, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(['GET'])
+def get_vendedores_aniversariantes_mes(request, mes):
+
+  if mes < 1 or mes > 12:
+    return JsonResponse({'error': 'O mês deve ser entre 1 e 12'}, status=status.HTTP_400_BAD_REQUEST)
+  
+  # Busca todos os vendedores que fazem aniversário naquele mes
+  vendedores = Vendedor.objects.filter(data_nasc__month=str(mes))
+  serializer = VendedorSerializer(vendedores, many=True)
+  return JsonResponse({'data': serializer.data}, safe=False, status=status.HTTP_200_OK)

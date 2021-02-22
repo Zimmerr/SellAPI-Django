@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 import environ
+import sys
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -79,23 +80,30 @@ WSGI_APPLICATION = 'SellAPI.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-DATABASES = {
+db_sqlite = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
-#DATABASES = {
-#  'default': {
-#      'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#      'NAME': env('DATABASE_NAME'),
-#      'USER': env('DATABASE_USER'),
-#      'PASSWORD': env('DATABASE_PASSWORD'),
-#      'HOST': env('DATABASE_HOST'),
-#      'PORT': env('DATABASE_PORT'),
-#  }
-#}
+db_postgres = {
+  'default': {
+      'ENGINE': 'django.db.backends.postgresql_psycopg2',
+      'NAME': env('DATABASE_NAME'),
+      'USER': env('DATABASE_USER'),
+      'PASSWORD': env('DATABASE_PASSWORD'),
+      'HOST': env('DATABASE_HOST'),
+      'PORT': env('DATABASE_PORT'),
+  }
+}
+
+DATABASES = db_sqlite
+
+# if 'test' in sys.argv:
+#   DATABASES = db_sqlite
+# else:
+#   DATABASES = db_postgres
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
